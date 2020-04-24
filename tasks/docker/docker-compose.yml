@@ -20,8 +20,14 @@
     dest: "{{ docker_compose_path }}"
     mode: 0755
 
+- name: check /usr/bin/docker-compose exists
+  stat:
+    path: /usr/bin/docker-compose
+  register: found_compose
+
 - name: create symlink docker-compose
   file:
     src: "{{ docker_compose_path }}"
     dest: /usr/bin/docker-compose
     state: link
+  when: found_compose.stat.exists

@@ -15,25 +15,6 @@
   file:
     path: "{{ certs_dir }}"
     state: directory
-    
-- name: Generate an CA private key.
-  openssl_privatekey:
-    path: "{{ ca_key_file }}"
-    size: "{{ key_size }}"
-
-- name: Generate an CA CSR.
-  openssl_csr:
-    path: "{{ certs_dir }}/caReq.csr"
-    privatekey_path: "{{ ca_key_file }}"
-    common_name: "{{ common_name }}-ca"
-
-- name: Generate a Self Signed OpenSSL CA certificate.
-  openssl_certificate:
-    path: "{{ ca_cert_file }}"
-    privatekey_path: "{{ ca_key_file }}"
-    csr_path: "{{ certs_dir }}/caReq.csr"
-    selfsigned_not_after: "{{ certificate_expiry }}"
-    provider: selfsigned
 
 - name: Generate an server private key.
   openssl_privatekey:
@@ -45,14 +26,12 @@
     path: "{{ certs_dir }}/servereq.csr"
     privatekey_path: "{{ server_key_file }}"
     common_name: "server"
-    subject_alt_name: 'DNS:*'
+    subject_alt_name: "DNS:{{ docker_host }}"
 
-- name: Generate a server certificate.
+- name: Generate a Self Signed OpenSSL Server certificate.
   openssl_certificate:
     path: "{{ server_cert_file }}"
     privatekey_path: "{{ server_key_file }}"
     csr_path: "{{ certs_dir }}/servereq.csr"
-    ownca_path: "{{ ca_cert_file }}"
-    ownca_privatekey_path: "{{ ca_key_file }}"
-    ownca_not_after: "{{ certificate_expiry }}"
-    provider: ownca
+    selfsigned_not_after: "{{ certificate_expiry }}"
+    provider: selfsigned

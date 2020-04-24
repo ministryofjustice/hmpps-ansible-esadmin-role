@@ -115,6 +115,21 @@
       register: instance_config_dict
       when: server.changed | bool
 
+    - name: create data ebs volume
+      ec2_vol:
+        instance: "{{ instance_conf_dict.instance_ids[0] }}"
+        volume_size: "20"
+        volume_type: "gp2"
+        name: "{{ volume_name }}"
+        device_name: "{{ device_name }}"
+        delete_on_termination: yes
+        region: "{{ aws_region }}"
+        tags:
+          application: esadmin
+          service: alfresco
+          type: data
+          esadmin_ebs_managed: true
+
     - name: Convert instance config dict to a list
       set_fact:
         instance_conf: "{{ instance_config_dict.results | map(attribute='ansible_facts.instance_conf_dict') | list }}"

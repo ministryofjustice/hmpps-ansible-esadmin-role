@@ -3,3 +3,7 @@
 generate_certs: true
 docker_tls: true
 aws_region: eu-west-2
+device_name: /dev/xvdb
+volume_name: hmpps-ansible-esadmin-role
+volume_fs_type: xfs
+mount_point: /opt/eslocal

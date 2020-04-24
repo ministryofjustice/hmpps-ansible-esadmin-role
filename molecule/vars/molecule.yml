@@ -25,3 +25,6 @@ security_group_rules_egress:
 
 keypair_name: "{{ common_name }}"
 keypair_path: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/ssh_key"
+
+device_name: /dev/xvdb
+volume_name: "{{ common_name }}"

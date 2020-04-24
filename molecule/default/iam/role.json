@@ -16,6 +16,30 @@
             "Resource": [
                 "arn:aws:ssm:*:*:parameter/esadmin/*"
             ]
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "EC2Perms",
+            "Action": [
+                "ec2:DescribeInstances"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "EC2VolumePerms",
+            "Action": [
+                "ec2:DetachVolume",
+                "ec2:CreateVolume",
+                "ec2:AttachVolume",
+                "ec2:DescribeVolumeAttribute",
+                "ec2:DescribeVolumeStatus",
+                "sts:DecodeAuthorizationMessage",
+                "ec2:DescribeVolumes"
+            ],
+            "Resource": [
+                "*"
+            ]
         }
     ]
 }
