@@ -1,0 +1,21 @@
+---
+# tasks file for hmpps-ansible-esadmin-role
+
+- name: ensure preqs are installed
+  include: prereqs.yml
+
+- include_tasks: system/setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: manage esadmin directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ docker_base_dir }}"
+
+- name: generate docker certs
+  include_tasks: ssm/main.yml
+  when: generate_certs
+
+- include_tasks: docker/install.yml

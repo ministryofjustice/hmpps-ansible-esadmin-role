@@ -1,0 +1,27 @@
+---
+
+ssh_user: centos
+ssh_port: 22
+vpc_id: vpc-02321f288159e5d0e
+aws_region: eu-west-2
+ssm_prefix: esadmin
+
+common_name: hmpps-ansible-esadmin-role
+security_group_description: Security group for testing hmpps-ansible-esadmin-role
+security_group_rules:
+  - proto: tcp
+    from_port: "{{ ssh_port }}"
+    to_port: "{{ ssh_port }}"
+    cidr_ip: '0.0.0.0/0'
+  - proto: icmp
+    from_port: 8
+    to_port: -1
+    cidr_ip: '0.0.0.0/0'
+security_group_rules_egress:
+  - proto: -1
+    from_port: 0
+    to_port: 0
+    cidr_ip: '0.0.0.0/0'
+
+keypair_name: "{{ common_name }}"
+keypair_path: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/ssh_key"

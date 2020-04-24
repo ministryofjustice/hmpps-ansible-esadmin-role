@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars_files:
+    - ../vars/role.yml
+  tasks:
+    - name: "Include hmpps-ansible-esadmin-role"
+      include_role:
+        name: "hmpps-ansible-esadmin-role"

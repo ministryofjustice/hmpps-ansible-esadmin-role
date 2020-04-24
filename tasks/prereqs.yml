@@ -1,0 +1,16 @@
+---
+
+- name: Ensure epel-release package installed.
+  yum:
+    name: epel-release
+    state: present
+
+- name: Ensure python-pip package installed.
+  yum:
+    name: python-pip
+    state: present
+
+- name: ensure python pip packages install
+  pip:
+    name: ['boto3', 'botocore']
+    state: present

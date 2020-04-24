@@ -1,0 +1,43 @@
+---
+
+- name: get ca cert file
+  command: "cat {{ ca_cert_file }}"
+  no_log: true
+  register: ca_cert
+
+- name: upload ca cert in ssm store
+  aws_ssm_parameter_store:
+    name: "{{ ssm_ca_param_name }}"
+    description: "{{ common_name }} ca cert"
+    string_type: "String"
+    value: "{{ ca_cert.stdout }}"
+    overwrite_value: "{{ ssm_overwrite }}"
+    region: "{{ aws_region }}"
+
+- name: get server cert file
+  command: "cat {{ server_cert_file }}"
+  no_log: true
+  register: server_cert
+
+- name: upload server cert in ssm store
+  aws_ssm_parameter_store:
+    name: "{{ ssm_server_cert_param_name }}"
+    description: "{{ common_name }} server cert"
+    string_type: "String"
+    value: "{{ server_cert.stdout }}"
+    overwrite_value: "{{ ssm_overwrite }}"
+    region: "{{ aws_region }}"
+
+- name: get server key file
+  command: "cat {{ server_key_file }}"
+  no_log: true
+  register: server_key
+
+- name: upload server key in ssm store
+  aws_ssm_parameter_store:
+    name: "{{ ssm_server_key_param_name }}"
+    description: "{{ common_name }} server key"
+    string_type: "SecureString"
+    value: "{{ server_key.stdout }}"
+    overwrite_value: "{{ ssm_overwrite }}"
+    region: "{{ aws_region }}"

@@ -1,0 +1,21 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Sid": "SsmParamStoreDescribe",
+            "Action": "ssm:DescribeParameters",
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "SsmParamStorePerms",
+            "Action": "*",
+            "Resource": [
+                "arn:aws:ssm:*:*:parameter/esadmin/*"
+            ]
+        }
+    ]
+}

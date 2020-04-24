@@ -1,0 +1,7 @@
+---
+# handlers file for hmpps-ansible-esadmin-role
+
+- name: restart docker
+  service:
+    name: docker
+    state: "{{ docker_restart_handler_state }}"

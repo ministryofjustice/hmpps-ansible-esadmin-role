@@ -1,0 +1,34 @@
+---
+
+- name: Ensure docker certs dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0660
+  with_items:
+    - "{{ docker_cert_dir }}"
+
+- name: Add docker ca cert file
+  template:
+    src: ssl.pem.j2
+    dest: "{{ docker_ca_cert_file }}"
+  vars:
+    ssl_pem_data: "{{ docker_ca }}"
+  notify: restart docker
+
+- name: Add docker cert file
+  template:
+    src: ssl.pem.j2
+    dest: "{{ docker_cert_file }}"
+  vars:
+    ssl_pem_data: "{{ docker_cert }}"
+  notify: restart docker
+
+- name: Add docker key file
+  template:
+    src: ssl.pem.j2
+    dest: "{{ docker_key_file }}"
+    mode: 0600
+  vars:
+    ssl_pem_data: "{{ docker_key }}"
+  notify: restart docker

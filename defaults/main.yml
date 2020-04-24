@@ -1,0 +1,42 @@
+---
+# defaults file for hmpps-ansible-esadmin-role
+
+# Used for configuration of docker daemon
+docker_configure: true
+docker_base_dir : /opt/docker
+docker_data_root: "{{ docker_base_dir }}/data"
+docker_config_dir: /etc/docker
+certs_dir: "{{ docker_base_dir  }}/ca"
+common_name: esadmin
+certificate_expiry: +28d
+key_size: 2048
+server_cert_file: "{{ certs_dir }}/serverCert.pem"
+ca_cert_file: "{{ certs_dir }}/caCert.pem"
+ca_key_file: "{{ certs_dir }}/caKey.pem"
+server_key_file: "{{ certs_dir }}/serverKey.pem"
+ssm_prefix: "{{ common_name }}"
+ssm_overwrite: changed
+aws_region: eu-west-2
+
+# Edition can be one of: 'ce' (Community Edition) or 'ee' (Enterprise Edition).
+docker_edition: 'ce'
+docker_package: "docker-{{ docker_edition }}"
+docker_package_state: present
+
+# Used only for RedHat/CentOS/Fedora.
+docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
+docker_yum_repo_enable_edge: 0
+docker_yum_repo_enable_test: 0
+
+# Service options.
+docker_service_state: started
+docker_service_enabled: true
+docker_restart_handler_state: restarted
+
+# tls
+generate_certs: false
+docker_tls: false
+docker_cert_dir: "{{ docker_config_dir }}/certs"
+docker_ca_cert_file: "{{ docker_cert_dir }}/ca.pem"
+docker_cert_file: "{{ docker_cert_dir }}/cert.pem"
+docker_key_file: "{{ docker_cert_dir }}/key.pem"

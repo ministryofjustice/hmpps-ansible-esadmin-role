@@ -1,0 +1,4 @@
+---
+
+generate_certs: true
+aws_region: eu-west-2

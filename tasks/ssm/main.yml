@@ -1,0 +1,28 @@
+---
+
+- name: set ssm docker cert facts
+  set_fact:
+    ssm_ca_param_name: "/{{ ssm_prefix }}/ca_cert"
+    ssm_server_cert_param_name: "/{{ ssm_prefix }}/server_cert"
+    ssm_server_key_param_name: "/{{ ssm_prefix }}/server_key"
+
+- name: check if certs file exists
+  stat: 
+    path: "{{ server_cert_file }}"
+  register: cert_created
+
+- name: Test whether that certificate is valid for next 7 days
+  openssl_certificate_info:
+    path: "{{ server_cert_file }}"
+    valid_at:
+      point_1: "+7d"
+  register: cert_info
+  when: cert_created.stat.exists == true 
+
+- name: generate certs
+  include_tasks: ssm/generate_certs.yml
+  when: cert_created.stat.exists == false or 
+    cert_info.valid_at.point_1 == false
+
+- name: upload certs to ssm
+  include_tasks: ssm/create_ssm.yml
