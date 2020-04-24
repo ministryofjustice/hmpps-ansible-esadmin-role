@@ -18,4 +18,4 @@
   include_tasks: ssm/main.yml
   when: generate_certs
 
-- include_tasks: docker/install.yml
+- include_tasks: docker/main.yml

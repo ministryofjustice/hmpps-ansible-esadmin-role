@@ -1,4 +1,5 @@
 ---
+# tasks/ssm/generate_certs.yml
 
 - name: Ensure python OpenSSL dependencies are installed.
   pip:

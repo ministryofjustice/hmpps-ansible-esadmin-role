@@ -1,4 +1,5 @@
 ---
 
 generate_certs: true
+docker_tls: true
 aws_region: eu-west-2

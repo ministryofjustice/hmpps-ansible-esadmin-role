@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+[Service]
+ExecStart=
+{% if docker_tls %}
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H=0.0.0.0:2376 --tlsverify --tlscacert={{ docker_ca_cert_file }} --tlscert={{ docker_cert_file }} --tlskey={{ docker_key_file }}
+{% else %}
+ExecStart=/usr/bin/dockerd
+{% endif %}
