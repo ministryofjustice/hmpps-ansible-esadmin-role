@@ -7,7 +7,7 @@
 - include_tasks: system/setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
 
-- name: manage esadmin directories
+- name: manage root directories
   file:
     path: "{{ item }}"
     state: directory
@@ -19,3 +19,5 @@
   when: generate_certs
 
 - include_tasks: docker/main.yml
+
+- include_tasks: esadmin/main.yml

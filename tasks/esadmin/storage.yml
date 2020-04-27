@@ -1,0 +1,61 @@
+---
+# tasks/esadmin/storage.yml
+
+- name: get instance_id
+  uri:
+    url: http://169.254.169.254/latest/meta-data/instance-id
+    return_content: yes
+  register: instance_data
+
+- name: attach ebs volume
+  ec2_vol:
+    instance: "{{ instance_data.content }}"
+    name: "{{ volume_name }}"
+    device_name: "{{ device_name }}"
+    region: "{{ aws_region }}"
+
+- name: "create mount path for {{ volume_name }}"
+  file:
+    state: "directory"
+    owner: "{{ esadmin_user }}"
+    group: "{{ esadmin_user }}"
+    path: "{{ mount_point }}"
+
+- name: Read device information
+  parted: device={{ device_name }} unit=MiB
+  register: sdb_info
+
+- name: "create partition on {{ volume_name }}"
+  parted:
+    device: "{{ device_name }}"
+    number: 1
+    label: "gpt"
+    part_start: "0%"
+    part_end: "100%"
+    name: "data"
+    state: "present"
+  when: not sdb_info.partitions
+
+- name: "format partition on {{ volume_name }}"
+  filesystem:
+    dev: "{{ device_name }}"
+    fstype: "{{ volume_fs_type }}"
+  when: not sdb_info.partitions
+
+- name: "mount the partition for {{ volume_name }}"
+  mount:
+    path: "{{ mount_point }}"
+    src: "{{ device_name }}"
+    fstype: "{{ volume_fs_type }}"
+    state: "mounted"
+
+- name: "ensure mount path permissions"
+  file:
+    state: "directory"
+    owner: "{{ esadmin_user }}"
+    group: "{{ esadmin_user }}"
+    path: "{{ mount_point }}/{{ item }}"
+    mode: 0770
+    recurse: yes
+  with_items:
+    - psql

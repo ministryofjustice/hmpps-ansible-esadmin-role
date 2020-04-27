@@ -1,9 +1,8 @@
 ---
 # defaults file for hmpps-ansible-esadmin-role
 
-# Used for configuration of docker daemon
 docker_configure: true
-docker_base_dir : /opt/docker
+docker_base_dir: /opt/docker
 docker_data_root: "{{ docker_base_dir }}/data"
 docker_config_dir: /etc/docker
 certs_dir: "{{ docker_base_dir  }}/ca"
@@ -40,6 +39,7 @@ docker_cert_dir: "{{ docker_config_dir }}/certs"
 docker_ca_cert_file: "{{ docker_cert_dir }}/ca.pem"
 docker_cert_file: "{{ docker_cert_dir }}/cert.pem"
 docker_key_file: "{{ docker_cert_dir }}/key.pem"
+docker_host: localhost
 
 # Docker Compose options.
 docker_install_compose: true
@@ -48,3 +48,18 @@ docker_compose_path: /usr/local/bin/docker-compose
 
 # A list of users who will be added to the docker group.
 docker_users: []
+
+# esadmin
+esadmin_user: elasticsearch
+esadmin_gid: 3999
+config_bucket: test
+alf_backup_bucket: test
+alf_storage_bucket: test
+cron_hour:  "2,6,10,15,19,23" 
+
+# storage
+manage_storage: true
+volume_name: "{{ common_name }}"
+device_name: /dev/xvdb
+volume_fs_type: xfs
+mount_point: /opt/eslocal

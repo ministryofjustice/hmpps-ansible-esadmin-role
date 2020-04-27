@@ -8,7 +8,7 @@
     ssm_server_key_param_name: "/{{ ssm_prefix }}/server_key"
 
 - name: check if certs file exists
-  stat: 
+  stat:
     path: "{{ server_cert_file }}"
   register: cert_created
 
@@ -18,12 +18,12 @@
     valid_at:
       point_1: "+7d"
   register: cert_info
-  when: cert_created.stat.exists == true 
+  when: cert_created.stat.exists
 
 - name: generate certs
   include_tasks: ssm/generate_certs.yml
-  when: cert_created.stat.exists == false or 
-    cert_info.valid_at.point_1 == false
+  when: not cert_created.stat.exists or
+    not cert_info.valid_at.point_1
 
 - name: upload certs to ssm
   include_tasks: ssm/create_ssm.yml

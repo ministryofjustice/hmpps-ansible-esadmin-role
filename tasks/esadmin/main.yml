@@ -1,0 +1,87 @@
+---
+# tasks/user/main.yml
+
+- name: set esadmins sync facts
+  set_fact:
+    scripts_dir: /opt/scripts
+
+- name: Ensure esadmin group exists
+  group:
+    name: "{{ esadmin_user }}"
+    gid: "{{ esadmin_gid }}"
+    state: present
+
+- name: Ensure esadmin user exists
+  user:
+    name: "{{ esadmin_user }}"
+    comment: "{{ esadmin_user }}"
+    uid: "{{ esadmin_gid }}"
+    group: "{{ esadmin_user }}"
+
+- name: manage esadmin directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ esadmin_user }}"
+    group: "{{ esadmin_user }}"
+  with_items:
+    - "{{ scripts_dir }}"
+    - /opt/local
+    - /opt/es_backups
+
+- name: manage storage devices
+  include_tasks: esadmin/storage.yml
+  when: manage_storage
+
+- name: manage sysctl settings
+  sysctl:
+    name: vm.max_map_count
+    value: "262144"
+    state: present
+    sysctl_file: /etc/sysctl.d/elasticsearch.conf
+
+- name: nofile limit for the esadmin user
+  pam_limits:
+    domain: "{{ esadmin_user }}"
+    limit_type: "-"
+    limit_item: nofile
+    value: "65536"
+
+- name: memlock, both soft and hard, limit esadmin user.
+  pam_limits:
+    domain: "{{ esadmin_user }}"
+    limit_type: '-'
+    limit_item: memlock
+    value: unlimited
+
+- name: add content sync docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/docker-compose.yml
+    owner: "{{ esadmin_user }}"
+    group: "{{ esadmin_user }}"
+  register: compose_file
+
+- name: sync script file
+  template:
+    src: content-synch.sh.j2
+    dest: /opt/storage-sync.sh
+    owner: "{{ esadmin_user }}"
+    group: "{{ esadmin_user }}"
+  vars:
+    docker_compose_file: "{{ compose_file.dest }}"
+  register: sync_script
+
+- name: Ensure sync scripts runs everyday
+  cron:
+    name: "content sync every 4 hours"
+    minute: "0"
+    hour: "{{ cron_hour }}"
+    job: "/bin/sh {{ sync_script.dest }} > /dev/null"
+
+- name: Ensure sync scripts runs at end of day
+  cron:
+    name: "content sync end of day"
+    minute: "59"
+    hour: "23"
+    job: "/bin/sh {{ sync_script.dest }} > /dev/null"
