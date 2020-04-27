@@ -1,0 +1,6 @@
+#!/bin/bash
+set +e
+aws s3 sync --delete s3://{{ config_bucket }}/scripts/ {{ scripts_dir }}/ 
+chown -R {{ esadmin_user }}:{{ esadmin_user }} {{ scripts_dir }}
+docker-compose -f {{ docker_compose_file }} up -d content
+set +e

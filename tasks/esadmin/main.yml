@@ -54,6 +54,13 @@
     limit_item: memlock
     value: unlimited
 
+- name: sync script file
+  template:
+    src: sync-scripts.sh.j2
+    dest: "{{ scripts_dir }}/sync-scripts.sh"
+    owner: "{{ esadmin_user }}"
+    group: "{{ esadmin_user }}"
+
 - name: add content sync docker-compose file
   template:
     src: docker-compose.yml.j2
@@ -62,7 +69,7 @@
     group: "{{ esadmin_user }}"
   register: compose_file
 
-- name: sync script file
+- name: content sync script file
   template:
     src: content-synch.sh.j2
     dest: /opt/storage-sync.sh
