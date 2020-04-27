@@ -30,4 +30,4 @@
     src: "{{ docker_compose_path }}"
     dest: /usr/bin/docker-compose
     state: link
-  when: found_compose.stat.exists
+  when: not found_compose.stat.exists
