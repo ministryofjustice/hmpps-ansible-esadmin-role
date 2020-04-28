@@ -10,10 +10,10 @@ lint: |
   flake8 molecule/tests
 platforms:
   - name: instance
-    image_owner: 895523100917
+    image_owner: ${AWS_ACCOUNT_ID:-895523100917}
     image_name: "HMPPS Base CentOS master *"
     instance_type: t2.micro
-    vpc_subnet_id: subnet-043763902fc8ac91c
+    vpc_subnet_id: ${VPC_SUBNET_ID:-subnet-043763902fc8ac91c}
     instance_tags:
       destroy: true
       Created_by: molecule

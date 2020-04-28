@@ -92,3 +92,18 @@
     minute: "59"
     hour: "23"
     job: "/bin/sh {{ sync_script.dest }} > /dev/null"
+
+- name: esadmin playbook file
+  template:
+    src: playbook.yml.j2
+    dest: /root/esadmin-playbook.yml
+  vars:
+    docker_compose_file: "{{ compose_file.dest }}"
+  register: esadmin_playbook
+
+- name: Ensure esadmin playbook runs everyday
+  cron:
+    name: "esadmin playbook"
+    minute: "30"
+    hour: "1,15"
+    job: "/bin/ansible {{ esadmin_playbook.dest }} > /dev/null"

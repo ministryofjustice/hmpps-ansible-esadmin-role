@@ -45,7 +45,8 @@ def test_docker_directories_exist(host, dir):
         '/etc/systemd/system/docker.service.d/docker.conf',
         '/bin/docker-compose',
         '/opt/docker-compose.yml',
-        '/opt/storage-sync.sh'
+        '/opt/storage-sync.sh',
+        '/root/esadmin-playbook.yml'
     ]
 )
 def test_docker_config_files_exist(host, dfile):
