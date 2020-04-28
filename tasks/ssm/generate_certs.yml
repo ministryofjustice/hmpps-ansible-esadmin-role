@@ -35,3 +35,6 @@
     csr_path: "{{ certs_dir }}/servereq.csr"
     selfsigned_not_after: "{{ certificate_expiry }}"
     provider: selfsigned
+
+- name: upload certs to ssm
+  include_tasks: ssm/create_ssm.yml

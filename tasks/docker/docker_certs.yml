@@ -1,6 +1,12 @@
 ---
 # tasks/docker/docker_certs.yml
 
+- name: retrieve cert data from ssm
+  set_fact:
+    docker_ca: "{{ lookup('aws_ssm', ssm_server_cert_param_name, region=aws_region) }}"
+    docker_cert: "{{ lookup('aws_ssm', ssm_server_cert_param_name, region=aws_region) }}"
+    docker_key: "{{ lookup('aws_ssm', ssm_server_key_param_name, region=aws_region) }}"
+
 - name: Ensure docker certs dirs exists
   file:
     path: "{{ item }}"

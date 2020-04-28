@@ -17,8 +17,6 @@
 - name: "create mount path for {{ volume_name }}"
   file:
     state: "directory"
-    owner: "{{ esadmin_user }}"
-    group: "{{ esadmin_user }}"
     path: "{{ mount_point }}"
 
 - name: Read device information
