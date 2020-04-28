@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  vars_files:
+     - "{{ playbook_dir }}/bootstrap_vars.yml"
+  roles:
+     - ansible-esadmin-role
