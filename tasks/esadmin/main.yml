@@ -106,4 +106,4 @@
     name: "esadmin playbook"
     minute: "30"
     hour: "1,15"
-    job: "/bin/ansible {{ esadmin_playbook.dest }} > /dev/null"
+    job: "/bin/ansible-playbook {{ esadmin_playbook.dest }} > /dev/null"
