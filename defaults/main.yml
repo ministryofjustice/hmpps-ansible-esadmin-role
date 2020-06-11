@@ -18,7 +18,7 @@ ssm_overwrite: changed
 aws_region: eu-west-2
 
 # Edition can be one of: 'ce' (Community Edition) or 'ee' (Enterprise Edition).
-docker_edition: 'ce'
+docker_edition: "ce"
 docker_package: "docker-{{ docker_edition }}"
 docker_package_state: present
 
@@ -55,7 +55,7 @@ esadmin_gid: 3999
 config_bucket: test
 alf_backup_bucket: test
 alf_storage_bucket: test
-cron_hour:  "2,6,10,15,19,23" 
+cron_hour: "2,6,10,15,19,23"
 
 # storage
 manage_storage: true
@@ -63,3 +63,14 @@ volume_name: "{{ common_name }}"
 device_name: /dev/xvdb
 volume_fs_type: xfs
 mount_point: /opt/eslocal
+
+# services
+services_root: /opt/services
+worker_dir: "{{ services_root }}/worker"
+worker_container: worker
+worker_count: 5
+redis_host: localhost
+redis_port: 6379
+worker_node: false
+log_group: hmpps/esadmin
+log_stream: "ec2"

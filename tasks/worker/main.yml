@@ -1,0 +1,40 @@
+---
+- name: create worker service directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ worker_dir }}"
+
+- name: create worker compose file
+  template:
+    src: worker/docker-compose.yml.j2
+    dest: "{{ worker_dir }}/docker-compose.yml"
+  register: compose_updated
+
+- name: create worker service file
+  template:
+    src: worker/systemd-service.j2
+    dest: "/etc/systemd/system/{{ worker_container }}.service"
+  vars:
+    work_dir: "{{ worker_root }}"
+  register: worker_configs
+
+- name: Reload systemd daemon for worker refresh
+  systemd:
+    name: "{{ worker_container }}"
+    daemon_reload: true
+    state: restarted
+    enabled: yes
+  when: worker_configs is changed
+
+- name: restart worker service
+  service:
+    name: "{{ worker_container }}"
+    state: restarted
+  when: compose_updated is changed
+
+- name: ensure worker service is running
+  service:
+    name: "{{ worker_container }}"
+    state: started

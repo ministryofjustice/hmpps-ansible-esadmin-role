@@ -20,4 +20,10 @@
 
 - include_tasks: docker/main.yml
 
-- include_tasks: esadmin/main.yml
+- name: configure ci instance
+  include_tasks: esadmin/main.yml
+  when: not worker_node
+
+- name: configure worker node
+  include_tasks: worker/main.yml
+  when: worker_node

@@ -1,4 +1,10 @@
 {
     "data-root": "{{ docker_data_root }}",
-    "storage-driver": "overlay2"
+    "storage-driver": "overlay2",
+    "log-driver": "awslogs",
+    "log-opts": {
+        "awslogs-region": "{{ aws_region }}",
+        "awslogs-group": "{{ log_group }}",
+        "awslogs-stream": "{{ log_stream }}-{{ ansible_hostname }}"
+    }
 }
