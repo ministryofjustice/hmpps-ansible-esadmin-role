@@ -7,3 +7,5 @@ services:
     environment:
       - REDISTOGO_URL=redis://{{ redis_host }}:{{ redis_port }}
       - LOG_GROUP={{ log_group }}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
