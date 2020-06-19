@@ -3,6 +3,7 @@ version: "3"
 services:
   {{ worker_container }}:
     image: mojdigitalstudio/redis-s3-sync
+    entrypoint: ["python3", "worker.py"]
     environment:
       - REDISTOGO_URL=redis://{{ redis_host }}:{{ redis_port }}
       - LOG_GROUP={{ log_group }}
