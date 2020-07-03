@@ -4,8 +4,21 @@ services:
   {{ worker_container }}:
     image: mojdigitalstudio/redis-s3-sync
     entrypoint: ["sh", "worker.sh"]
+    restart: always
     environment:
       - REDISTOGO_URL=redis://{{ redis_host }}:{{ redis_port }}
       - LOG_GROUP={{ log_group }}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - worker_task
+  {{ worker_container }}_task:
+    image: mojdigitalstudio/redis-s3-sync
+    entrypoint: ["python3", "update_task.py"]
+    restart: always
+    environment:
+      - REDISTOGO_URL=redis://{{ redis_host }}:{{ redis_port }}
+      - LOG_GROUP={{ log_group }}
+      - ES_TASK_TTL=60
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
