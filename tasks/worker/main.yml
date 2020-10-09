@@ -16,8 +16,6 @@
   template:
     src: worker/systemd-service.j2
     dest: "/etc/systemd/system/{{ worker_container }}.service"
-  vars:
-    work_dir: "{{ worker_root }}"
   register: worker_configs
 
 - name: Reload systemd daemon for worker refresh
